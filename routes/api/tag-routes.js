@@ -39,21 +39,27 @@ router.post('/', async (req, res) => {
   }
 });
 
+
 router.put('/:id', async (req, res) => {
   try {
-    
+    const { id } = req.params;
     const updatedTag = await Tag.update(req.body, {
-      where: { id: req.params.id }
+      where: { id: id }
     });
+    
+    // Check if any rows were affected by the update
     if (updatedTag[0] === 0) {
-      return res.status(404).json({ message: 'Tag not found' });
+      return res.status(404).json({ message: 'Tag not found or no changes were made' });
     }
+
     return res.json({ message: 'Tag updated successfully' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
 
 router.delete('/:id', async (req, res) => {
   try {
